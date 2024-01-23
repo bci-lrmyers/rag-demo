@@ -10,6 +10,7 @@ import chainlit as cl
 print("hello")
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
+LLM_MODEL = 'TheBloke/Llama-2-7B-Chat-GGUF'
 
 demo_prompt_template = """Use the following pieces of information to answer the user’s question.
 If you don’t know the answer, just say that you don’t know, don’t try to make up an answer.
@@ -43,7 +44,7 @@ def retrieval_qa_chain(llm, prompt, db):
 # Load the locally downloaded model here
 def load_llm():
     llm = CTransformers(
-            model = "meta/Llama-2-7B-Chat-GGML",
+            model = LLM_MODEL,
             model_type="llama",
             max_new_tokens = 512,
             temperature = 0.5)
@@ -87,9 +88,10 @@ async def main(message):
             stream_final_answer=True,
             answer_prefix_tokens=["FINAL", "ANSWER"])
     cb.answer_reached = True
-    res = await chain.acall(message, callbacks=[cb])
+    res = await chain.acall(message.content, callbacks=[cb])
+
     answer = res["result"]
-    sources = res["documents"]
+    sources = res["source_documents"]
     if sources:
         answer += f"\nSources:" + str(sources)
     else:

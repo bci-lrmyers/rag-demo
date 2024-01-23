@@ -5,6 +5,11 @@ The following instructions loosely follow the text of the following article:
 	
 ## Steps
 
+1. Clone the repo.
+    ```
+	git clone git@github.com:bci-lrmyers/rag-demo.git
+	cd rag-demo
+	```
 1. Create the anaconda environment:
     ```
 	conda create --name rag-demo python=3.10
@@ -25,9 +30,10 @@ The following instructions loosely follow the text of the following article:
 		import faiss
 		print(faiss.__version__)
 		```
-1. Install LangChain:
+1. Install LangChain and langchain-community:
     ```
-	pip install langchain
+	pip install langchain langchain-community
+	pip install pypdf sentence-transformers	ctransformers
 	```
 1. Install chainlit for UI code. Instructions for installing chainlit are
    found [here](https://docs.chainlit.io/get-started/installation).
@@ -38,4 +44,21 @@ The following instructions loosely follow the text of the following article:
 	```
 	chainlit hello
 	```
-
+1. Create filesystem structure.
+    ```
+	mkdir demodataPDFs
+	mkdir vectorstore
+	mkdir vectorstore\db_faiss
+	```
+1. Place PDF files in the demodataPDFs directory then build the
+   vector database. This may take some time depending on the number
+   of PDF files.
+    ```
+	python ingest.py
+	```
+1. Launch the UI and ask questions.
+    ```
+	run
+	```
+	
+	

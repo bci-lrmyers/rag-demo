@@ -4,4 +4,5 @@ parta-20240105T103443Z-001/
 .chainlit/
 chainlit.md
 vectorstore/
+__pycache__/
 
