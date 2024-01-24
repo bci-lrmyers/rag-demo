@@ -52,7 +52,8 @@ def load_llm():
             model = LLM_MODEL,
             model_type="llama",
             max_new_tokens = 512,
-            temperature = 0.5)
+            temperature = 0.5,
+            lib='cuda')
     return llm
 
 
@@ -66,8 +67,8 @@ def qa_bot():
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
 
     # gpu_res = FAISS.StandardGpuResources()
-    # index_flat = FAISS.IndexFlatL2(db)
-    # gpu_index_flat = FAISS.index_cpu_to_gpu(gpu_res, 0, index_flat)
+    # cpu_index_flat = FAISS.IndexFlatL2(db)
+    # gpu_index_flat = FAISS.index_cpu_to_gpu(gpu_res, 0, cpu_index_flat)
 
     llm = load_llm()
     qa_prompt = custom_prompt()
