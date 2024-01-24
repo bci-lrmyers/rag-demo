@@ -11,6 +11,11 @@ print("hello")
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 LLM_MODEL = 'TheBloke/Llama-2-7B-Chat-GGUF'
+# EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
+# EMBEDDING_ARGS = {'device': 'cpu'}
+EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'
+EMBEDDING_ARGS = {'device': 'cuda'}
+ENCODE_ARGS = {'normalize_embeddings': False}
 
 demo_prompt_template = """Use the following pieces of information to answer the user’s question.
 If you don’t know the answer, just say that you don’t know, don’t try to make up an answer.
@@ -54,9 +59,16 @@ def load_llm():
 #QA Model Function
 def qa_bot():
     embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={'device': 'cpu'})
+            model_name=EMBEDDING_MODEL,
+            model_kwargs=EMBEDDING_ARGS,
+            encode_kwargs=ENCODE_ARGS,
+            multi_process=False)
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
+
+    # gpu_res = FAISS.StandardGpuResources()
+    # index_flat = FAISS.IndexFlatL2(db)
+    # gpu_index_flat = FAISS.index_cpu_to_gpu(gpu_res, 0, index_flat)
+
     llm = load_llm()
     qa_prompt = custom_prompt()
     qa = retrieval_qa_chain(llm, qa_prompt, db)

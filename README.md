@@ -19,12 +19,22 @@ The following instructions loosely follow the text of the following article:
     ```
     conda install jupyter
     ```
-1. Install FAISS. FAISS is used as the vector store for the documents. The
+1. Install the cuda version of pytorch. Installation instructions copied
+   from [here](https://pytorch.org/get-started/locally/).
+    ```
+	conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+	```
+	* Test pytorch installation:
+        ```
+		import torch
+		print(torch.cuda.is_available())
+		```
+2. Install FAISS. FAISS is used as the vector store for the documents. The
    facebook instructions for installing FAISS are located [here](https://github.com/facebookresearch/faiss/blob/main/INSTALL.md).
    Install the GPU version.
     ```
 	conda install -c conda-forge faiss-gpu
-    ```	
+    ```
 	* Test FAISS installation:
 	    ```
 		import faiss
@@ -35,12 +45,12 @@ The following instructions loosely follow the text of the following article:
 	export LD_LIBRARY_PATH=/home/yourname/.conda/envs/rag-demo/lib:/$LD_LIBRARY_PATH
 	Then go back and retest the installation.
 	
-1. Install LangChain and langchain-community:
+3. Install LangChain and langchain-community:
     ```
 	python -m pip install langchain langchain-community
-	python -m pip install pypdf sentence-transformers	ctransformers
+	python -m pip install pypdf sentence-transformers ctransformers
 	```
-1. Install chainlit for UI code. Instructions for installing chainlit are
+4. Install chainlit for UI code. Instructions for installing chainlit are
    found [here](https://docs.chainlit.io/get-started/installation).
     ```
 	python -m pip install chainlit
@@ -49,21 +59,33 @@ The following instructions loosely follow the text of the following article:
 	```
 	chainlit hello
 	```
-1. Create filesystem structure.
+5. Create filesystem structure.
     ```
 	mkdir demodataPDFs
 	mkdir vectorstore
 	mkdir vectorstore/db_faiss
 	```
-1. Place PDF files in the demodataPDFs directory then build the
+6. Place PDF files in the demodataPDFs directory then build the
    vector database. This may take some time depending on the number
    of PDF files.
     ```
 	python ingest.py
 	```
-1. Launch the UI and ask questions.
+7. Launch the UI and ask questions.
     ```
 	chainlit run rag-demo.py -w
 	```
-	the file run.bat also has this command inside of it.	
-	
+	the file run.bat also has this command inside of it.
+
+## Encodings
+
+Take a look at the [HuggingFace Leaderboard](https://huggingface.co/spaces/mteb/leaderboard)
+for rankings of the sentence transformers. The [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+sentence transformer converts sentences to 384 dimension vector space and ranks 53rd on the
+leader board. The [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)
+from HuggingFace transforms to 768 dimensional vector space and ranks 45th on the leader
+board. Look [here](https://huggingface.co/sentence-transformers?sort_models=downloads#models)
+for a complete list of the sentence tranformer models available at HuggingFace.
+
+* ```EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'```
+* ```EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'```
