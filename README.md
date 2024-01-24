@@ -29,6 +29,12 @@ The following instructions loosely follow the text of the following article:
 		import torch
 		print(torch.cuda.is_available())
 		```
+1. Install the cuda version of llama.cpp python bindings. Installation instructions
+   copied from [here](https://github.com/abetlen/llama-cpp-python).
+    ```
+	set CMAKE_ARGS=-DLLAMA_CUBLAS=on
+	python -m pip install --verbose llama-cpp-python 
+	```
 2. Install FAISS. FAISS is used as the vector store for the documents. The
    facebook instructions for installing FAISS are located [here](https://github.com/facebookresearch/faiss/blob/main/INSTALL.md).
    Install the GPU version.

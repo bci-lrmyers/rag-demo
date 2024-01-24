@@ -6,16 +6,22 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
 import chainlit as cl
+from langchain_community.llms import LlamaCpp
+from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 print("hello")
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
-LLM_MODEL = 'TheBloke/Llama-2-7B-Chat-GGUF'
+LLM_MODEL = 'TheBloke/Llama-2-70B-Chat-GGUF'
 # EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 # EMBEDDING_ARGS = {'device': 'cpu'}
 EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'
 EMBEDDING_ARGS = {'device': 'cuda'}
 ENCODE_ARGS = {'normalize_embeddings': False}
+
+n_gpu_layers = 41  # Change this value based on your model and your GPU VRAM pool.
+n_batch = 256  # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
 
 demo_prompt_template = """Use the following pieces of information to answer the user’s question.
 If you don’t know the answer, just say that you don’t know, don’t try to make up an answer.
@@ -48,12 +54,25 @@ def retrieval_qa_chain(llm, prompt, db):
 
 # Load the locally downloaded model here
 def load_llm():
-    llm = CTransformers(
-            model = LLM_MODEL,
-            model_type="llama",
-            max_new_tokens = 512,
-            temperature = 0.5,
-            lib='cuda')
+    # llm = CTransformers(
+    #         model = LLM_MODEL,
+    #         model_type="llama",
+    #         max_new_tokens = 512,
+    #         temperature = 0.5,
+    #         lib='cuda')
+
+    # Callbacks support token-wise streaming
+    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+
+    llm = LlamaCpp(
+        model_path="./models/13b_Q5_K_M.gguf",
+        temperature=0.2,
+        max_tokens=2000,
+        n_gpu_layers=n_gpu_layers,
+        n_batch=n_batch,
+        callback_manager=callback_manager,
+        verbose=True,  # Verbose is required to pass to the callback manager
+    )
     return llm
 
 
@@ -101,7 +120,7 @@ async def main(message):
             stream_final_answer=True,
             answer_prefix_tokens=["FINAL", "ANSWER"])
     cb.answer_reached = True
-    res = await chain.acall(message.content, callbacks=[cb])
+    res = await chain.ainvoke(message.content, callbacks=[cb])
 
     answer = res["result"]
     sources = res["source_documents"]
