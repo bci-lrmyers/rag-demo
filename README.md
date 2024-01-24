@@ -30,15 +30,20 @@ The following instructions loosely follow the text of the following article:
 		import faiss
 		print(faiss.__version__)
 		```
+	If you get an undefined symbol cublasLt_for_cublas_HSS, then you need to modify your LD_LIBRARY_PATH
+	to something like
+	export LD_LIBRARY_PATH=/home/yourname/.conda/envs/rag-demo/lib:/$LD_LIBRARY_PATH
+	Then go back and retest the installation.
+	
 1. Install LangChain and langchain-community:
     ```
-	pip install langchain langchain-community
-	pip install pypdf sentence-transformers	ctransformers
+	python -m pip install langchain langchain-community
+	python -m pip install pypdf sentence-transformers	ctransformers
 	```
 1. Install chainlit for UI code. Instructions for installing chainlit are
    found [here](https://docs.chainlit.io/get-started/installation).
     ```
-	pip install chainlit
+	python -m pip install chainlit
 	```
 	* Test the chainlit installation:
 	```
@@ -48,7 +53,7 @@ The following instructions loosely follow the text of the following article:
     ```
 	mkdir demodataPDFs
 	mkdir vectorstore
-	mkdir vectorstore\db_faiss
+	mkdir vectorstore/db_faiss
 	```
 1. Place PDF files in the demodataPDFs directory then build the
    vector database. This may take some time depending on the number
@@ -58,7 +63,7 @@ The following instructions loosely follow the text of the following article:
 	```
 1. Launch the UI and ask questions.
     ```
-	run
+	chainlit run rag-demo.py -w
 	```
-	
+	the file run.bat also has this command inside of it.	
 	
