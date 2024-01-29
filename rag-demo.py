@@ -3,14 +3,12 @@ from langchain_community.document_loaders import DirectoryLoader
 from langchain.prompts import PromptTemplate
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_community.llms import CTransformers
+# from langchain_community.llms import CTransformers
 from langchain.chains import RetrievalQA
 import chainlit as cl
 from langchain_community.llms import LlamaCpp
-from langchain.callbacks.manager import CallbackManager
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-
-print("hello")
+# from langchain.callbacks.manager import CallbackManager
+# from langchain.callbacks.base import BaseCallbackHandler
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 LLM_MODEL = 'TheBloke/Llama-2-70B-Chat-GGUF'
@@ -52,6 +50,13 @@ def retrieval_qa_chain(llm, prompt, db):
     return qa_chain
 
 
+# class MyCustomSyncHandler(BaseCallbackHandler):
+#     def on_llm_new_token(self, token: str, **kwargs) -> None:
+#         stream = cl.user_session.get("stream")
+#         stream["tokens"] += token
+#         # print(stream["tokens"])
+
+
 # Load the locally downloaded model here
 def load_llm():
     # llm = CTransformers(
@@ -62,7 +67,7 @@ def load_llm():
     #         lib='cuda')
 
     # Callbacks support token-wise streaming
-    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+    # callback_manager = CallbackManager([MyCustomSyncHandler()])
 
     llm = LlamaCpp(
         model_path="./models/13b_Q5_K_M.gguf",
@@ -70,7 +75,7 @@ def load_llm():
         max_tokens=2000,
         n_gpu_layers=n_gpu_layers,
         n_batch=n_batch,
-        callback_manager=callback_manager,
+        # callback_manager=callback_manager,
         verbose=True,  # Verbose is required to pass to the callback manager
     )
     return llm
@@ -125,9 +130,9 @@ async def main(message):
     answer = res["result"]
     sources = res["source_documents"]
     if sources:
-        answer += f"\nSources:" + str(sources)
+        answer += f"\n\nSources: " + str(sources)
     else:
-        answer += "\nNo sources found"
+        answer += "\n\nNo sources found"
     await cl.Message(content=answer).send()
 
 
