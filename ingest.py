@@ -12,7 +12,8 @@ CHUNK_OVERLAP = 50
 
 # EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 # EMBEDDING_ARGS = {'device': 'cpu'}
-EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'
+# EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'
+EMBEDDING_MODEL = 'embaas/sentence-transformers-e5-large-v2'
 EMBEDDING_ARGS = {'device': 'cuda'}
 ENCODE_ARGS = {'normalize_embeddings': False}
 

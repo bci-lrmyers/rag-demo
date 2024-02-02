@@ -14,22 +14,32 @@ DB_FAISS_PATH = 'vectorstore/db_faiss'
 LLM_MODEL = 'TheBloke/Llama-2-70B-Chat-GGUF'
 # EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 # EMBEDDING_ARGS = {'device': 'cpu'}
-EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'
+# EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'
+EMBEDDING_MODEL = 'embaas/sentence-transformers-e5-large-v2'
 EMBEDDING_ARGS = {'device': 'cuda'}
 ENCODE_ARGS = {'normalize_embeddings': False}
 
 n_gpu_layers = 41  # Change this value based on your model and your GPU VRAM pool.
-n_batch = 256  # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
+# n_gpu_layers = 81  # Change this value based on your model and your GPU VRAM pool.
+n_batch = 512  # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
 
+# demo_prompt_template = """Use the following pieces of information to answer the user’s question.
+# If you don’t know the answer, just say that you don’t know, don’t try to make up an answer.
+# 
+# Context: {context}
+# Question: {question}
+# 
+# Only return the helpful answer below and nothing else.
+# Helpful and Caring answer:
+# """
 demo_prompt_template = """Use the following pieces of information to answer the user’s question.
 If you don’t know the answer, just say that you don’t know, don’t try to make up an answer.
 
 Context: {context}
 Question: {question}
 
-Only return the helpful answer below and nothing else.
-Helpful and Caring answer:
-    """
+Answer:
+"""
 
 # Prompt template for QA retrieval for each vectorstore
 def custom_prompt():
@@ -69,10 +79,16 @@ def load_llm():
     # Callbacks support token-wise streaming
     # callback_manager = CallbackManager([MyCustomSyncHandler()])
 
+    #   model_path="./models/13b_Q5_K_M.gguf",
+    #   model_path="./models/llama-2-70b-chat.Q4_K_M.gguf", # TheBloke/Llama-2-70B-Chat-GGUF
+    #   model_path="./models/llama-2-13b-chat.Q5_K_M.gguf", # TheBloke/Llama-2-13B-chat-GGUF
+
     llm = LlamaCpp(
-        model_path="./models/13b_Q5_K_M.gguf",
+        model_path="./models/llama-2-13b-chat.Q5_K_M.gguf", # TheBloke/Llama-2-13B-chat-GGUF
         temperature=0.2,
-        max_tokens=2000,
+        # model_kwargs={ "context_window":4096, "max_new_tokens":4096 },
+        n_ctx=4096,
+        max_tokens=4096,
         n_gpu_layers=n_gpu_layers,
         n_batch=n_batch,
         # callback_manager=callback_manager,
@@ -113,13 +129,16 @@ async def start():
     chain = qa_bot()
     msg = cl.Message(content="Starting your gen AI bot!...")
     await msg.send()
-    msg.content = "Welcome to Demo Bot!. Ask your question here:"
+    msg.content = "Welcome to VulcanGPT!. Ask your question here:"
     await msg.update()
     cl.user_session.set("chain", chain)
 
 
 @cl.on_message
 async def main(message):
+    # stream = { "tokens":"" }
+    # cl.user_session.set("stream", stream)
+
     chain = cl.user_session.get("chain") 
     cb = cl.AsyncLangchainCallbackHandler(
             stream_final_answer=True,
@@ -127,6 +146,7 @@ async def main(message):
     cb.answer_reached = True
     res = await chain.ainvoke(message.content, callbacks=[cb])
 
+    # answer = stream["tokens"]
     answer = res["result"]
     sources = res["source_documents"]
     if sources:
