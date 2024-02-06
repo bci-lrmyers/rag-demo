@@ -25,7 +25,11 @@ def create_vector_db():
     loader = DirectoryLoader(
             DATA_PATH,
             glob=DATA_PATTERN,
-            loader_cls=PyPDFLoader)
+            loader_cls=PyPDFLoader,
+#            use_multithreading=True,
+#            max_concurrency=8,
+            show_progress=True,
+            recursive=True)
     documents = loader.load()
 
     text_splitter = RecursiveCharacterTextSplitter(
