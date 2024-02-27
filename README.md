@@ -22,7 +22,7 @@ The following instructions loosely follow the text of the following article:
 1. Install the cuda version of pytorch. Installation instructions copied
    from [here](https://pytorch.org/get-started/locally/).
     ```
-	conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+    conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 	```
 	* Test pytorch installation:
         ```
@@ -31,10 +31,15 @@ The following instructions loosely follow the text of the following article:
 		```
 1. Install the cuda version of llama.cpp python bindings. Installation instructions
    copied from [here](https://github.com/abetlen/llama-cpp-python).
-    ```
-	set CMAKE_ARGS=-DLLAMA_CUBLAS=on
-	python -m pip install --verbose llama-cpp-python 
-	```
+    * For Windows:
+        ```
+	    set CMAKE_ARGS=-DLLAMA_CUBLAS=on
+	    python -m pip install --verbose llama-cpp-python 
+        ```
+    * For Linux:
+        ```
+        CMAKE_ARGS="-DLLAMA_CUBLAS=on" python -m pip install --verbose llama-cpp-python
+	    ```
 2. Install FAISS. FAISS is used as the vector store for the documents. The
    facebook instructions for installing FAISS are located [here](https://github.com/facebookresearch/faiss/blob/main/INSTALL.md).
    Install the GPU version.
@@ -53,13 +58,13 @@ The following instructions loosely follow the text of the following article:
 	
 3. Install LangChain and langchain-community:
     ```
-	python -m pip install langchain langchain-community
+	python -m pip install langchain langchain-community protobuf==3.19 google-auth
 	python -m pip install pypdf sentence-transformers ctransformers
 	```
 4. Install chainlit for UI code. Instructions for installing chainlit are
    found [here](https://docs.chainlit.io/get-started/installation).
     ```
-	python -m pip install chainlit
+	python -m pip install chainlit protobuf==3.19
 	```
 	* Test the chainlit installation:
 	```
