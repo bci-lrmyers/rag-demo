@@ -10,3 +10,5 @@ __pycache__/
 models/
 parta-20240105T103443Z-002.zip
 parta-20240105T103443Z-002/
+data/
+.env

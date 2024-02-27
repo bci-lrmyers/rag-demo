@@ -100,3 +100,27 @@ for a complete list of the sentence tranformer models available at HuggingFace.
 
 * ```EMBEDDING_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'```
 * ```EMBEDDING_MODEL = 'sentence-transformers/all-mpnet-base-v2'```
+
+## Advanced RAG with llamaindex
+
+* [Advanced Retrieval-Augmented Generation: From Theory to LlamaIndex Implementation](https://towardsdatascience.com/advanced-retrieval-augmented-generation-from-theory-to-llamaindex-implementation-4de1464a9930)
+
+### Setup steps:
+
+1. Install llamaindex.
+    ```
+    python -m pip install llama-index
+    ```
+1. Install the Weaviate vector database.
+    ```
+    python -m pip install weaviate-client llama-index-vector-stores-weaviate
+    ```
+1. Create a file with the name .env containing the following:
+    ```
+    OPENAI_API_KEY="<YOUR_OPENAI_API_KEY>"
+
+1. Install the dotenv library
+   ```
+   python -m pip install python-dotenv
+   ```
+
