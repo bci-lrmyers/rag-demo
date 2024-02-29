@@ -19,16 +19,21 @@ The following instructions loosely follow the text of the following article:
     ```
     conda install jupyter
     ```
-1. Install the cuda version of pytorch. Installation instructions copied
+1. Install pytorch. Installation instructions copied
    from [here](https://pytorch.org/get-started/locally/).
-    ```
-    conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-	```
-	* Test pytorch installation:
+    * For CPU only:
         ```
-		import torch
-		print(torch.cuda.is_available())
-		```
+        conda install pytorch torchvision torchaudio cpuonly -c pytorch
+        ```
+    * For GPU:
+        ```
+        conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+	    ```
+	    * Test pytorch installation:
+            ```
+		    import torch
+		    print(torch.cuda.is_available())
+		    ```
 1. Install the cuda version of llama.cpp python bindings. Installation instructions
    copied from [here](https://github.com/abetlen/llama-cpp-python).
     * For Windows:
