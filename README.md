@@ -25,6 +25,11 @@ The following instructions loosely follow the text of the following article:
         ```
         conda install pytorch torchvision torchaudio cpuonly -c pytorch
         ```
+	    * Test pytorch installation:
+            ```
+		    import torch
+		    print(torch.__version__)
+		    ```
     * For GPU:
         ```
         conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
@@ -36,21 +41,30 @@ The following instructions loosely follow the text of the following article:
 		    ```
 1. Install the cuda version of llama.cpp python bindings. Installation instructions
    copied from [here](https://github.com/abetlen/llama-cpp-python).
-    * For Windows:
+    * For CPU only:
         ```
-	    set CMAKE_ARGS=-DLLAMA_CUBLAS=on
-	    python -m pip install --verbose llama-cpp-python 
+        python -m pip install --verbose llama-cpp-python
         ```
-    * For Linux:
-        ```
-        CMAKE_ARGS="-DLLAMA_CUBLAS=on" python -m pip install --verbose llama-cpp-python
-	    ```
+    * For GPU:
+        * On Windows:
+            ```
+	        set CMAKE_ARGS=-DLLAMA_CUBLAS=on
+	        python -m pip install --verbose llama-cpp-python 
+            ```
+        * On Linux:
+            ```
+            CMAKE_ARGS="-DLLAMA_CUBLAS=on" python -m pip install --verbose llama-cpp-python
+	        ```
 2. Install FAISS. FAISS is used as the vector store for the documents. The
    facebook instructions for installing FAISS are located [here](https://github.com/facebookresearch/faiss/blob/main/INSTALL.md).
-   Install the GPU version.
-    ```
-	conda install -c conda-forge faiss-gpu
-    ```
+    * For CPU only:
+        ```
+	    conda install -c conda-forge faiss-cpu
+        ```
+    * For GPU:
+        ```
+	    conda install -c conda-forge faiss-gpu
+        ```
 	* Test FAISS installation:
 	    ```
 		import faiss

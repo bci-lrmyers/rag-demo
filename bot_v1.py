@@ -11,7 +11,7 @@ print("Starting VulcanGPT...")
 MODEL_PATH = "./models/llama-2-13b-chat.Q5_K_M.gguf" # TheBloke/Llama-2-13B-chat-GGUF
 MODEL_TEMP = 0.2
 MODEL_CONTEXT_SIZE = 4096
-MODEL_GPU_LAYERS = 41 # Change this value based on your model and your GPU VRAM pool.
+MODEL_GPU_LAYERS = 0 # Change this value based on your model and your GPU VRAM pool.
 MODEL_BATCH_SIZE = 512  # Should be between 1 and MODEL_CONTEXT_SIZE, consider the amount of VRAM in your GPU.
 MODEL_MAX_TOKENS = 4096
 
