@@ -134,11 +134,15 @@ for a complete list of the sentence tranformer models available at HuggingFace.
     ```
     python -m pip install weaviate-client llama-index-vector-stores-weaviate
     ```
-1. Create a file with the name .env containing the following:
+1. Install the Chroma vector database.
+    ```
+    python -m pip install chromadb llama-index-vector-stores-chroma llama-index-embeddings-huggingface
+    ```
+2. Create a file with the name .env containing the following:
     ```
     OPENAI_API_KEY="<YOUR_OPENAI_API_KEY>"
 
-1. Install the dotenv library
+3. Install the dotenv library
    ```
    python -m pip install python-dotenv
    ```
